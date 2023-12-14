@@ -9,20 +9,21 @@ char **split_line(char *line);
 int execute(char **args);
 
 char *read_line(void) {
+  int buffer_size = RN_BUFFER_SIZE;
   char *buffer = malloc(sizeof(char) * RN_BUFFER_SIZE);
 
-  if(!buffer) {
+  if (!buffer) {
     fprintf(stderr, "error allocating the buffer size");
     exit(EXIT_FAILURE);
   }
 
-
   int position = 0;
   char current_char;
-  while(1) {
+
+  while (1) {
     current_char = getchar();
 
-    if(current_char == EOF || current_char == '\n' ) {
+    if (current_char == EOF || current_char == '\n') {
       buffer[position] = '\0';
       return buffer;
     } else {
@@ -30,8 +31,18 @@ char *read_line(void) {
     }
 
     position++;
-  }
 
+    if (position > RN_BUFFER_SIZE) {
+      buffer_size += RN_BUFFER_SIZE;
+
+      buffer = realloc(buffer, buffer_size);
+
+      if (!buffer) {
+        fprintf(stderr, "error reallocating the buffer size");
+        exit(EXIT_FAILURE);
+      }
+    }
+  }
 }
 
 void loop(void) {
@@ -46,8 +57,8 @@ void loop(void) {
   } while (status);
 }
 
-int main(void) { 
+int main(void) {
 
   loop();
-  return EXIT_SUCCESS; 
+  return EXIT_SUCCESS;
 }
