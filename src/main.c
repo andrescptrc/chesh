@@ -1,22 +1,53 @@
 #include <stdio.h>
 #include <stdlib.h>
 
+#define RN_BUFFER_SIZE 1024
+
 void loop(void);
 char *read_line(void);
 char **split_line(char *line);
 int execute(char **args);
 
-void loop(void) {
+char *read_line(void) {
+  char *buffer = malloc(sizeof(char) * RN_BUFFER_SIZE);
 
-  int status = 1;
+  if(!buffer) {
+    fprintf(stderr, "error allocating the buffer size");
+    exit(EXIT_FAILURE);
+  }
 
-  do {
-    printf("🍺 > ");
-  } while (status);
+
+  int position = 0;
+  char current_char;
+  while(1) {
+    current_char = getchar();
+
+    if(current_char == EOF || current_char == '\n' ) {
+      buffer[position] = '\0';
+      return buffer;
+    } else {
+      buffer[position] = current_char;
+    }
+
+    position++;
+  }
 
 }
 
+void loop(void) {
 
-int main(void) {
-  return EXIT_SUCCESS;
+  int status = 1;
+  char *line;
+
+  do {
+    printf("🍺 > ");
+    line = read_line();
+
+  } while (status);
+}
+
+int main(void) { 
+
+  loop();
+  return EXIT_SUCCESS; 
 }
